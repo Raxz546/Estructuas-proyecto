@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Bienvenido, {{ nombre }}</h2>
+        <p>Tu rol es: <strong>{{ rol }}</strong></p>
+
+        {% if rol == 'admin' %}
+            <p>Este es el panel de administración. Aquí podrás gestionar usuarios y archivos.</p>
+        {% elif rol == 'owner' %}
+            <p>Este es el panel del dueño del sistema. Tienes control total.</p>
+        {% else %}
+            <p>Este es tu espacio personal de usuario. Puedes subir y gestionar tus archivos.</p>
+        {% endif %}
+
+        <p><a href="{{ url_for('gestionar_datos', usuario=session['username']) }}">Gestionar mis datos</a></p>
+
+{% if rol in ['admin', 'owner'] %}
+    <p><a href="{{ url_for('usuarios_view') }}">Ver todos los usuarios</a></p>
+{% endif %}
+
+
+        <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    </div>
+</body>
+</html>

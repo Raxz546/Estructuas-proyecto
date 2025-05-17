@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h2>Usuarios registrados</h2>
+        <table border="1" cellpadding="5" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Nombre</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u.usuario }}</td>
+                    <td>{{ u.nombre }}</td>
+                    <td>{{ u.rol }}</td>
+                    <td>
+                        {% if rol == 'owner' %}
+                            <a href="{{ url_for('editar_usuario', usuario=u.usuario) }}">Editar</a>
+                            {% if u.rol == 'user' %}
+                                |
+                                <form method="POST" action="{{ url_for('eliminar_usuario', usuario=u.usuario) }}" style="display:inline;">
+                                    <button type="submit" class="eliminar">Eliminar cuenta</button>
+                                </form>
+                            {% endif %}
+                        {% elif rol == 'admin' and u.rol != 'owner' %}
+                            <a href="{{ url_for('editar_usuario', usuario=u.usuario) }}">Editar</a>
+                        {% elif rol == 'user' and u.usuario == session['username'] %}
+                            <a href="{{ url_for('editar_usuario', usuario=u.usuario) }}">Editar</a>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p><a href="{{ url_for('dashboard') }}">Volver al Dashboard</a></p>
+    </div>
+</body>
+</html>

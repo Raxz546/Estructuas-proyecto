@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Bienvenido</h2>
+        <p>Por favor, inicia sesión o regístrate para continuar.</p>
+        
+        <div class="buttons">
+            <a href="{{ url_for('login') }}" class="btn">Iniciar Sesión</a>
+            <a href="{{ url_for('register') }}" class="btn">Registrarse</a>
+        </div>
+    </div>
+</body>
+</html>

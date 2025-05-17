@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Gestión de Datos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Gestión de Datos de {{ usuario }}</h2>
+
+        <!-- FORMULARIO DE TEXTO -->
+        <form method="POST">
+            <input type="hidden" name="tipo" value="texto">
+            <textarea name="contenido" rows="3" cols="40" placeholder="Escribe un texto..."></textarea><br>
+            <button type="submit">Guardar texto</button>
+        </form>
+
+        <!-- FORMULARIO DE IMAGEN -->
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="tipo" value="imagen">
+            <input type="file" name="imagen" accept="image/*" required><br>
+            <button type="submit">Subir imagen</button>
+        </form>
+
+        <!-- FORMULARIO DE TABLA -->
+        <form method="POST">
+            <input type="hidden" name="tipo" value="tabla">
+            <textarea name="contenido_tabla" rows="4" cols="40" placeholder="Pega aquí tu tabla estilo Excel..."></textarea><br>
+            <button type="submit">Guardar tabla</button>
+        </form>
+
+        <hr>
+
+        <!-- TEXTOS -->
+        <h3>Textos</h3>
+        <ul>
+            {% for t in datos.textos %}
+                <li>
+                    {{ t.contenido }}
+                    {% if rol in ['owner', 'admin'] or usuario == session['username'] %}
+                        |
+                        <a href="{{ url_for('editar_dato', usuario=usuario, tipo='textos', id=t.id) }}">Editar</a>
+                        |
+                        <form method="POST" action="{{ url_for('eliminar_dato', usuario=usuario, tipo='textos', id=t.id) }}" style="display:inline;">
+                            <button type="submit" class="eliminar">Eliminar</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- IMÁGENES -->
+        <h3>Imágenes</h3>
+        <div style="display: flex; flex-wrap: wrap;">
+            {% for img in datos.imagenes %}
+                <div style="margin: 10px; text-align: center;">
+                    <img src="{{ url_for('static', filename='uploads/' ~ img.contenido) }}" alt="imagen" width="150"><br>
+                    {% if rol in ['owner', 'admin'] or usuario == session['username'] %}
+                        <form method="POST" action="{{ url_for('eliminar_dato', usuario=usuario, tipo='imagenes', id=img.id) }}">
+                            <button type="submit" class="eliminar">Eliminar</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- TABLAS -->
+        <h3>Tablas</h3>
+        <ul>
+            {% for tabla in datos.tablas %}
+                <li>
+                    <pre>{{ tabla.contenido }}</pre>
+                    {% if rol in ['owner', 'admin'] or usuario == session['username'] %}
+                        |
+                        <a href="{{ url_for('editar_dato', usuario=usuario, tipo='tablas', id=tabla.id) }}">Editar</a>
+                        |
+                        <form method="POST" action="{{ url_for('eliminar_dato', usuario=usuario, tipo='tablas', id=tabla.id) }}" style="display:inline;">
+                            <button type="submit" class="eliminar">Eliminar</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p><a href="{{ url_for('dashboard') }}">Volver al Dashboard</a></p>
+    </div>
+</body>
+</html>
