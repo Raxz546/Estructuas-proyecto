@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver sugerencias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Sugerencias recibidas</h2>
+        {% if sugerencias %}
+            <ul>
+                {% for s in sugerencias %}
+                <li>
+                    <strong>{{ s.nombre }}</strong> ({{ s.fecha }}):<br>
+                    {{ s.mensaje }}
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay sugerencias todavía.</p>
+        {% endif %}
+        <p><a href="{{ url_for('dashboard') }}">Volver al Dashboard</a></p>
+    </div>
+</body>
+</html>
+<!-- Compare this snippet from templates/sugerencias.html: -->

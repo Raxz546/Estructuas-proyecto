@@ -19,9 +19,16 @@
         {% endif %}
 
         <p><a href="{{ url_for('gestionar_datos', usuario=session['username']) }}">Gestionar mis datos</a></p>
+        <p><a href="{{ url_for('sugerencias') }}">📝 Buzón de sugerencias</a></p>
 
 {% if rol in ['admin', 'owner'] %}
     <p><a href="{{ url_for('usuarios_view') }}">Ver todos los usuarios</a></p>
+{% endif %}
+
+
+
+{% if rol in ['admin', 'owner'] %}
+    <p><a href="{{ url_for('ver_sugerencias') }}">📬 Ver sugerencias recibidas</a></p>
 {% endif %}
 
 

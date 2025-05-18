@@ -5,6 +5,8 @@ import bcrypt
 from functools import wraps
 from uuid import uuid4
 from werkzeug.utils import secure_filename
+from datetime import datetime
+
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta'
@@ -296,3 +298,40 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
+    SUGERENCIAS_FILE = 'sugerencias.json'
+
+def cargar_sugerencias():
+    if not os.path.exists(SUGERENCIAS_FILE):
+        return []
+    with open(SUGERENCIAS_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def guardar_sugerencias(sugerencias):
+    with open(SUGERENCIAS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(sugerencias, f, indent=4, ensure_ascii=False)
+
+@app.route('/sugerencias', methods=['GET', 'POST'])
+@role_required('user', 'admin', 'owner')
+def sugerencias():
+    if request.method == 'POST':
+        nombre = request.form.get('nombre', '').strip() or "Anónimo"
+        mensaje = request.form.get('mensaje', '').strip()
+        fecha = datetime.now().strftime("%Y-%m-%d %H:%M")
+
+        if mensaje:
+            sugerencias = cargar_sugerencias()
+            sugerencias.append({
+                "nombre": nombre,
+                "mensaje": mensaje,
+                "fecha": fecha
+            })
+            guardar_sugerencias(sugerencias)
+            return redirect(url_for('dashboard'))
+
+    return render_template('sugerencias.html')
+@app.route('/ver_sugerencias')
+@role_required('admin', 'owner')
+def ver_sugerencias():
+    sugerencias = cargar_sugerencias()
+    return render_template('ver_sugerencias.html', sugerencias=sugerencias)

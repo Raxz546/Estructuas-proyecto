@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buzón de Sugerencias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Buzón de sugerencias</h2>
+        <form method="POST">
+            <label for="nombre">Nombre (opcional):</label><br>
+            <input type="text" name="nombre" id="nombre" placeholder="Tu nombre"><br><br>
+
+            <label for="mensaje">Sugerencia:</label><br>
+            <textarea name="mensaje" id="mensaje" rows="4" cols="40" required placeholder="Escribe tu sugerencia aquí..."></textarea><br><br>
+
+            <button type="submit">Enviar sugerencia</button>
+        </form>
+
+        <p><a href="{{ url_for('dashboard') }}">Volver al Dashboard</a></p>
+    </div>
+</body>
+</html>
